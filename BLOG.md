@@ -34,6 +34,8 @@ The method matters more than the tool, so here's the method:
 
 The output was a 15-section report. What follows is the part that generalizes.
 
+<p align="center"><img src="assets/architecture.svg" alt="Three-level nested StateGraph: a main graph (clarify → write_research_brief → research_supervisor → final_report_generation) wrapping a supervisor subgraph that delegates to parallel researcher subgraphs" width="100%"></p>
+
 ---
 
 ## What it found — and why it matters
@@ -80,7 +82,9 @@ The supervisor fans researchers out with `asyncio.gather(...)` and **no timeout*
 ### 🟡 The quieter ones
 A stale hardcoded `MODEL_TOKEN_LIMITS` map (`utils.py:788-829`) that returns `None` for unknown models — so truncation fails on the *first* retry instead of degrading; four broad `except Exception` blocks that can't tell transient from permanent errors; unbounded note accumulation in state; CI that runs only AI review bots; and legacy code bundled into the production package. Each is a small thing; together they're the texture of "prototype."
 
-NEO's report rolled these into a **production-readiness scorecard**:
+These rolled up into a **production-readiness scorecard** — clean architecture and strong docs, undermined by testing, observability, and CI sitting at the floor:
+
+<p align="center"><img src="assets/scorecard.svg" alt="Production-readiness scorecard: Test Coverage 1, Error Handling 2, Observability 1, CI/CD 1, Performance 3, Security 3, Documentation 4, Configuration 4 — 19 of 40, prototype tier" width="100%"></p>
 
 | Dimension | Score (1–5) | Dimension | Score (1–5) |
 |-----------|:-----------:|-----------|:-----------:|
@@ -90,6 +94,10 @@ NEO's report rolled these into a **production-readiness scorecard**:
 | CI/CD | 1 | Configuration | 4 |
 
 > **The verdict:** an excellent research prototype and reference architecture — *not* a production system. The gaps are precisely the distance between "reference implementation" and "something you'd run unattended for paying users."
+
+Plotted by likelihood and impact, the risks cluster exactly where you'd fear in an under-instrumented agent — reliability and cost, with one critical outlier:
+
+<p align="center"><img src="assets/risk-matrix.svg" alt="Risk matrix plotting 10 risks by likelihood and impact; R1 (the or True bug) is the highest at 16, followed by R2 stale token map (12) and R3 uncaught ValueError (10)" width="92%"></p>
 
 ---
 
@@ -121,6 +129,8 @@ Pulled out so you can apply them without ever touching this repo:
 ## What would be required for production
 
 A concrete roadmap, in priority order:
+
+<p align="center"><img src="assets/roadmap.svg" alt="Roadmap: 30 days stop the bleeding (fix or True bug, cost budget, timeouts, logging); 90 days make it operable (unit tests, CI gate, tracing, rate limiting); 6 months platform maturity (per-tenant cost, caching, input validation, split legacy)" width="100%"></p>
 
 ### First 30 days — stop the bleeding
 - Fix the `or True` bug; make early termination an explicit, logged decision.

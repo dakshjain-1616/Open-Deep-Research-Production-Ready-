@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 560" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="mbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+    <linearGradient id="c30" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f87171"/><stop offset="1" stop-color="#dc2626"/></linearGradient>
+    <linearGradient id="c90" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+    <linearGradient id="c180" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4ade80"/><stop offset="1" stop-color="#16a34a"/></linearGradient>
+  </defs>
+  <rect x="0" y="0" width="920" height="560" rx="20" fill="url(#mbg)"/>
+  <text x="40" y="54" fill="#f8fafc" font-size="29" font-weight="700">What Would Be Required for Production</text>
+  <text x="40" y="82" fill="#94a3b8" font-size="16">A priority-ordered path from prototype to platform</text>
+
+  <!-- timeline -->
+  <line x1="120" y1="116" x2="800" y2="116" stroke="#334155" stroke-width="3"/>
+  <circle cx="180" cy="116" r="7" fill="#dc2626"/><circle cx="470" cy="116" r="7" fill="#f97316"/><circle cx="760" cy="116" r="7" fill="#16a34a"/>
+
+  <!-- Card 30 -->
+  <rect x="40" y="140" width="276" height="380" rx="14" fill="#172033" stroke="#dc2626" stroke-width="1.5"/>
+  <rect x="40" y="140" width="276" height="50" rx="14" fill="url(#c30)"/>
+  <text x="60" y="172" fill="#fff" font-size="20" font-weight="800">30 days</text>
+  <text x="296" y="172" text-anchor="end" fill="#fff" font-size="13" font-weight="600">STOP THE BLEEDING</text>
+  <g fill="#e2e8f0" font-size="14">
+    <text x="60" y="226">▪ Fix the <tspan font-weight="700" fill="#fca5a5">`or True`</tspan> bug; make</text>
+    <text x="74" y="246">early exit explicit + logged</text>
+    <text x="60" y="284">▪ Per-run cost / token budget</text>
+    <text x="74" y="304">with a hard ceiling</text>
+    <text x="60" y="342">▪ Timeouts on every gather</text>
+    <text x="74" y="362">fan-out + partial fallback</text>
+    <text x="60" y="400">▪ Structured logging at each</text>
+    <text x="74" y="420">node; transient vs permanent</text>
+    <text x="74" y="440">error taxonomy</text>
+  </g>
+
+  <!-- Card 90 -->
+  <rect x="330" y="140" width="276" height="380" rx="14" fill="#172033" stroke="#f97316" stroke-width="1.5"/>
+  <rect x="330" y="140" width="276" height="50" rx="14" fill="url(#c90)"/>
+  <text x="350" y="172" fill="#fff" font-size="20" font-weight="800">90 days</text>
+  <text x="586" y="172" text-anchor="end" fill="#fff" font-size="13" font-weight="600">MAKE IT OPERABLE</text>
+  <g fill="#e2e8f0" font-size="14">
+    <text x="350" y="226">▪ Deterministic unit tests for</text>
+    <text x="364" y="246">reducers, routers, config, tools</text>
+    <text x="350" y="284">▪ CI gate: tests + lint + types</text>
+    <text x="364" y="304">block merges</text>
+    <text x="350" y="342">▪ End-to-end tracing across</text>
+    <text x="364" y="362">all three graph levels</text>
+    <text x="350" y="400">▪ Rate limiting / backpressure</text>
+    <text x="350" y="438">▪ Dynamic token-limit lookup</text>
+    <text x="364" y="458">(graceful on unknown models)</text>
+  </g>
+
+  <!-- Card 180 -->
+  <rect x="620" y="140" width="276" height="380" rx="14" fill="#172033" stroke="#16a34a" stroke-width="1.5"/>
+  <rect x="620" y="140" width="276" height="50" rx="14" fill="url(#c180)"/>
+  <text x="640" y="172" fill="#fff" font-size="20" font-weight="800">6 months</text>
+  <text x="876" y="172" text-anchor="end" fill="#fff" font-size="13" font-weight="600">PLATFORM MATURITY</text>
+  <g fill="#e2e8f0" font-size="14">
+    <text x="640" y="226">▪ Per-tenant cost attribution,</text>
+    <text x="654" y="246">budgets, dashboards, alerts</text>
+    <text x="640" y="284">▪ Search caching / dedup;</text>
+    <text x="654" y="304">bound state growth</text>
+    <text x="640" y="342">▪ Input validation + prompt-</text>
+    <text x="654" y="362">injection defenses</text>
+    <text x="640" y="400">▪ Split legacy out of prod</text>
+    <text x="654" y="420">package; release &amp;</text>
+    <text x="654" y="440">dependency-audit process</text>
+  </g>
+</svg>

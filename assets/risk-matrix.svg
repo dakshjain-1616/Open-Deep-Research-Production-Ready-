@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="rbg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="820" height="700" rx="20" fill="url(#rbg)"/>
+  <text x="40" y="54" fill="#f8fafc" font-size="30" font-weight="700">Risk Matrix</text>
+  <text x="40" y="82" fill="#94a3b8" font-size="16">Score = Likelihood × Impact · 10 risks plotted</text>
+
+  <!-- grid 5x5, origin x0=150 y0=120, cell 84 -->
+  <!-- cell colors by product (tinted) -->
+  <g opacity="0.32">
+    <!-- We draw row by row. Likelihood 5 (top) down to 1 (bottom). Impact 1..5 left to right. -->
+    <!-- L5 -->
+    <rect x="150" y="120" width="84" height="84" fill="#84cc16"/><rect x="234" y="120" width="84" height="84" fill="#eab308"/><rect x="318" y="120" width="84" height="84" fill="#f97316"/><rect x="402" y="120" width="84" height="84" fill="#f97316"/><rect x="486" y="120" width="84" height="84" fill="#dc2626"/>
+    <!-- L4 -->
+    <rect x="150" y="204" width="84" height="84" fill="#84cc16"/><rect x="234" y="204" width="84" height="84" fill="#eab308"/><rect x="318" y="204" width="84" height="84" fill="#eab308"/><rect x="402" y="204" width="84" height="84" fill="#dc2626"/><rect x="486" y="204" width="84" height="84" fill="#dc2626"/>
+    <!-- L3 -->
+    <rect x="150" y="288" width="84" height="84" fill="#22c55e"/><rect x="234" y="288" width="84" height="84" fill="#84cc16"/><rect x="318" y="288" width="84" height="84" fill="#eab308"/><rect x="402" y="288" width="84" height="84" fill="#f97316"/><rect x="486" y="288" width="84" height="84" fill="#f97316"/>
+    <!-- L2 -->
+    <rect x="150" y="372" width="84" height="84" fill="#22c55e"/><rect x="234" y="372" width="84" height="84" fill="#84cc16"/><rect x="318" y="372" width="84" height="84" fill="#84cc16"/><rect x="402" y="372" width="84" height="84" fill="#eab308"/><rect x="486" y="372" width="84" height="84" fill="#eab308"/>
+    <!-- L1 -->
+    <rect x="150" y="456" width="84" height="84" fill="#22c55e"/><rect x="234" y="456" width="84" height="84" fill="#22c55e"/><rect x="318" y="456" width="84" height="84" fill="#22c55e"/><rect x="402" y="456" width="84" height="84" fill="#84cc16"/><rect x="486" y="456" width="84" height="84" fill="#eab308"/>
+  </g>
+  <!-- grid lines -->
+  <g stroke="#0f172a" stroke-width="2" fill="none">
+    <rect x="150" y="120" width="420" height="420"/>
+    <line x1="234" y1="120" x2="234" y2="540"/><line x1="318" y1="120" x2="318" y2="540"/><line x1="402" y1="120" x2="402" y2="540"/><line x1="486" y1="120" x2="486" y2="540"/>
+    <line x1="150" y1="204" x2="570" y2="204"/><line x1="150" y1="288" x2="570" y2="288"/><line x1="150" y1="372" x2="570" y2="372"/><line x1="150" y1="456" x2="570" y2="456"/>
+  </g>
+
+  <!-- axis labels -->
+  <g fill="#94a3b8" font-size="13" text-anchor="middle">
+    <text x="192" y="560">1</text><text x="276" y="560">2</text><text x="360" y="560">3</text><text x="444" y="560">4</text><text x="528" y="560">5</text>
+  </g>
+  <text x="360" y="586" fill="#cbd5e1" font-size="15" font-weight="600" text-anchor="middle">Impact →</text>
+  <g fill="#94a3b8" font-size="13" text-anchor="middle">
+    <text x="138" y="166" >5</text><text x="138" y="250">4</text><text x="138" y="334">3</text><text x="138" y="418">2</text><text x="138" y="502">1</text>
+  </g>
+  <text x="92" y="330" fill="#cbd5e1" font-size="15" font-weight="600" text-anchor="middle" transform="rotate(-90 92 330)">Likelihood →</text>
+
+  <!-- risk bubbles -->
+  <g font-size="15" font-weight="700" text-anchor="middle">
+    <!-- R8 (I2,L4) -->
+    <circle cx="276" cy="246" r="22" fill="#f97316" stroke="#fff" stroke-width="2"/><text x="276" y="251" fill="#fff">R8</text>
+    <!-- R1 (I4,L4) -->
+    <circle cx="444" cy="246" r="22" fill="#dc2626" stroke="#fff" stroke-width="2"/><text x="444" y="251" fill="#fff">R1</text>
+    <!-- R4-7 cluster (I3,L3) -->
+    <circle cx="360" cy="330" r="24" fill="#eab308" stroke="#fff" stroke-width="2"/><text x="360" y="335" fill="#0f172a" font-size="13">R4–7</text>
+    <!-- R10 (I2,L3) -->
+    <circle cx="276" cy="330" r="22" fill="#eab308" stroke="#fff" stroke-width="2"/><text x="276" y="335" fill="#0f172a">R10</text>
+    <!-- R2 (I4,L3) -->
+    <circle cx="444" cy="330" r="22" fill="#f97316" stroke="#fff" stroke-width="2"/><text x="444" y="335" fill="#fff">R2</text>
+    <!-- R9 (I4,L2) -->
+    <circle cx="444" cy="414" r="22" fill="#eab308" stroke="#fff" stroke-width="2"/><text x="444" y="419" fill="#0f172a">R9</text>
+    <!-- R3 (I5,L2) -->
+    <circle cx="528" cy="414" r="22" fill="#f97316" stroke="#fff" stroke-width="2"/><text x="528" y="419" fill="#fff">R3</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="14.5" fill="#cbd5e1">
+    <text x="40" y="626" fill="#f8fafc" font-size="16" font-weight="700">Highest-scoring risks</text>
+    <circle cx="48" cy="650" r="6" fill="#dc2626"/><text x="62" y="655"><tspan fill="#f8fafc" font-weight="700">R1 (16)</tspan> · `or True` silently ends research on any error</text>
+    <circle cx="48" cy="674" r="6" fill="#f97316"/><text x="62" y="679"><tspan fill="#f8fafc" font-weight="700">R2 (12)</tspan> stale token-limit map · <tspan fill="#f8fafc" font-weight="700">R3 (10)</tspan> uncaught ValueError crashes the graph</text>
+    <text x="470" y="655" fill="#94a3b8" font-size="13">R4–7 (9): cost · injection · state growth · no timeout</text>
+    <text x="470" y="679" fill="#94a3b8" font-size="13">R8 (8) silent tool fail · R9 (8) token cleartext · R10 (6) MCP swallow</text>
+  </g>
+</svg>

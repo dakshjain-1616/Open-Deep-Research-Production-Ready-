@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 560" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f87171"/><stop offset="1" stop-color="#dc2626"/></linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+    <linearGradient id="yel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fde047"/><stop offset="1" stop-color="#eab308"/></linearGradient>
+    <linearGradient id="grn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4ade80"/><stop offset="1" stop-color="#16a34a"/></linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="860" height="560" rx="20" fill="url(#bg)"/>
+  <text x="40" y="56" fill="#f8fafc" font-size="30" font-weight="700">Production-Readiness Scorecard</text>
+  <text x="40" y="86" fill="#94a3b8" font-size="17">Open Deep Research · commit 68fb7ab</text>
+  <text x="820" y="64" text-anchor="end" fill="#f8fafc" font-size="34" font-weight="800">19<tspan fill="#64748b" font-size="22"> / 40</tspan></text>
+  <text x="820" y="88" text-anchor="end" fill="#fca5a5" font-size="15" font-weight="600">PROTOTYPE TIER</text>
+
+  <!-- gridlines -->
+  <g stroke="#334155" stroke-width="1">
+    <line x1="240" y1="120" x2="240" y2="498"/>
+    <line x1="352" y1="120" x2="352" y2="498"/>
+    <line x1="464" y1="120" x2="464" y2="498"/>
+    <line x1="576" y1="120" x2="576" y2="498"/>
+    <line x1="688" y1="120" x2="688" y2="498"/>
+    <line x1="800" y1="120" x2="800" y2="498"/>
+  </g>
+  <g fill="#64748b" font-size="13" text-anchor="middle">
+    <text x="240" y="116">1</text><text x="352" y="116">2</text><text x="464" y="116">3</text>
+    <text x="576" y="116">4</text><text x="688" y="116">5</text>
+  </g>
+
+  <!-- rows: x track from 240, unit width 112 -->
+  <g font-size="16">
+    <!-- Test Coverage 1 -->
+    <text x="224" y="152" text-anchor="end" fill="#e2e8f0">Test Coverage</text>
+    <rect x="240" y="134" width="112" height="26" rx="6" fill="url(#red)"/>
+    <text x="364" y="152" fill="#f87171" font-weight="700">1</text>
+    <!-- Error Handling 2 -->
+    <text x="224" y="196" text-anchor="end" fill="#e2e8f0">Error Handling</text>
+    <rect x="240" y="178" width="224" height="26" rx="6" fill="url(#org)"/>
+    <text x="476" y="196" fill="#fb923c" font-weight="700">2</text>
+    <!-- Observability 1 -->
+    <text x="224" y="240" text-anchor="end" fill="#e2e8f0">Observability</text>
+    <rect x="240" y="222" width="112" height="26" rx="6" fill="url(#red)"/>
+    <text x="364" y="240" fill="#f87171" font-weight="700">1</text>
+    <!-- CI/CD 1 -->
+    <text x="224" y="284" text-anchor="end" fill="#e2e8f0">CI / CD</text>
+    <rect x="240" y="266" width="112" height="26" rx="6" fill="url(#red)"/>
+    <text x="364" y="284" fill="#f87171" font-weight="700">1</text>
+    <!-- Performance 3 -->
+    <text x="224" y="328" text-anchor="end" fill="#e2e8f0">Performance</text>
+    <rect x="240" y="310" width="336" height="26" rx="6" fill="url(#yel)"/>
+    <text x="588" y="328" fill="#facc15" font-weight="700">3</text>
+    <!-- Security 3 -->
+    <text x="224" y="372" text-anchor="end" fill="#e2e8f0">Security</text>
+    <rect x="240" y="354" width="336" height="26" rx="6" fill="url(#yel)"/>
+    <text x="588" y="372" fill="#facc15" font-weight="700">3</text>
+    <!-- Documentation 4 -->
+    <text x="224" y="416" text-anchor="end" fill="#e2e8f0">Documentation</text>
+    <rect x="240" y="398" width="448" height="26" rx="6" fill="url(#grn)"/>
+    <text x="700" y="416" fill="#4ade80" font-weight="700">4</text>
+    <!-- Configuration 4 -->
+    <text x="224" y="460" text-anchor="end" fill="#e2e8f0">Configuration</text>
+    <rect x="240" y="442" width="448" height="26" rx="6" fill="url(#grn)"/>
+    <text x="700" y="460" fill="#4ade80" font-weight="700">4</text>
+  </g>
+
+  <text x="40" y="528" fill="#64748b" font-size="13">Clean architecture, strong docs &amp; config — undone by testing, observability and CI at the floor.</text>
+</svg>
