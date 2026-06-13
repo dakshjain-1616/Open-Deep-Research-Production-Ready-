@@ -47,7 +47,7 @@ Full ranked list of 10 in the report. Risk matrix highest score: **R1 (`or True`
 | File | What it is |
 |------|------------|
 | [`OPEN_DEEP_RESEARCH_DUE_DILIGENCE.md`](./OPEN_DEEP_RESEARCH_DUE_DILIGENCE.md) | The full 15-section due-diligence report (architecture deep dive, component & workflow analysis, scalability/reliability/security/maintainability assessments, risk matrix, top 10 findings, recommendations, and a grep-verified evidence index) |
-| [`BLOG.md`](./BLOG.md) | A narrative write-up: how Claude Code + NEO produced the audit, and what it found |
+| [`BLOG.md`](./BLOG.md) | An engineering case study: the findings, the principles underneath them, lessons for anyone building agent systems, and a 30/90/180-day path to production |
 
 ## How it was produced
 

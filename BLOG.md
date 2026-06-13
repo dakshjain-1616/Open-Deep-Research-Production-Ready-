@@ -1,60 +1,46 @@
-# We Pointed Claude Code + NEO at a Popular Agent Framework and Asked: "Is It Production-Ready?"
+# Is Open Deep Research Production-Ready? A Repo-Grounded Audit — and the Lessons for Anyone Building Agent Systems
 
-> One request, inside Claude Code. NEO cloned [`langchain-ai/open_deep_research`](https://github.com/langchain-ai/open_deep_research), read every source file, and wrote a 15-section due-diligence report — every finding tied to a real `file:line`. Then we made it bulletproof by re-verifying each citation against the actual code.
+> We ran a citation-by-citation production-readiness audit of a popular open-source "deep research" agent framework. The verdict — *excellent prototype, not production-ready* — is less interesting than **why**, and what every team building agent systems should take from it.
 
-**⏱ 7-min read · For:** engineering leads, AI platform teams, anyone evaluating an agent framework before they build on it
+**⏱ 10-min read · For:** engineering leaders, AI platform teams, anyone about to build on (or borrow patterns from) an open-source agent framework
 
 ---
 
 ## TL;DR
 
-- We worked entirely **inside Claude Code** and asked it to run a repo-grounded production-readiness audit of Open Deep Research.
-- Claude dispatched the heavy lifting to **NEO via MCP**. NEO cloned the repo locally, read the source end-to-end, and produced an **evidence-cited, 15-section report**.
-- The verdict: **a clean, well-architected research prototype — but not production-ready.** Zero tests, no CI, almost no observability, no cost controls, and a one-line bug that silently kills research on any error.
-- The part that makes it trustworthy: **Claude verified every citation against the clone.** Several line numbers were wrong on the first pass; we caught and fixed them before publishing.
+- **The subject:** [`langchain-ai/open_deep_research`](https://github.com/langchain-ai/open_deep_research) — a supervisor that spins up parallel researcher sub-agents to do automated deep research. We audited it at commit `68fb7ab`, with every finding tied to a verified `file:line`.
+- **The verdict:** a genuinely clean architecture (three-level nested `StateGraph`, structured outputs with retry, real multi-tenant auth) — but **not production-ready**: no unit tests, no CI gate, near-zero observability, no cost controls, no timeouts, and a one-line bug that silently ends research on *any* error.
+- **The point:** none of these gaps are unique to this repo. They are the **default failure profile of agent frameworks optimized for experimentation** — and that's what makes them worth studying.
+- **The method:** repository-grounded, evidence-driven analysis — read the source, cite the line, then *verify the citation against the code*. (Tooling: Claude Code + the NEO MCP. More on that at the end; it's the camera, not the subject.)
 
 ---
 
 ## Why audit a framework you didn't write?
 
-Open Deep Research is a popular reference implementation for agentic "deep research" — a supervisor that spins up parallel researcher sub-agents, each running search tools, compressing findings, and feeding a final report. If you're about to build a product on top of it (or borrow its patterns), you want to know two things: *how is it actually built*, and *what breaks when you put it under load?*
+Open Deep Research is a popular reference implementation for agentic "deep research" — a supervisor that delegates to parallel researcher sub-agents, each running search tools, compressing findings, and feeding a final report. If you're about to build a product on top of it (or lift its patterns), you want to know two things: *how is it actually built*, and *what breaks when you put it under load?*
 
-That's a due-diligence question. And the honest version of it is tedious: read the whole codebase, trace the graph, find the error handling, check the CI, map the dependencies — then translate all of it into risk.
-
-So we tried it the lazy way, without leaving the editor:
-
-> **From inside Claude Code, ask it to run a repo-grounded production-readiness audit of Open Deep Research — and let NEO do the investigation.**
+That's a due-diligence question, and the honest version is tedious: read the whole codebase, trace the graph, find the error handling, check the CI, map the dependencies — then translate all of it into risk. The interesting part isn't that we automated the reading. It's what the reading *revealed* about a pattern that repeats across nearly every agent framework in the wild.
 
 ---
 
-## The setup: one request
+## How we investigated
 
-We were in a normal Claude Code session and asked, in plain language, for a repository-**first** audit: clone the repo, read the real source, cite specific files and line numbers for every claim, and answer the questions that matter — how it's architected, how the research workflow runs, where it bottlenecks, what's risky, and what it would take to ship it.
+The method matters more than the tool, so here's the method:
 
-Claude recognized this as exactly the kind of long-running, file-producing investigation to hand to **NEO via its installed MCP**. It pointed NEO at the repo and kept us posted in the same chat.
+1. **Repository-first, not docs-first.** Clone the actual code; ignore the marketing. Read `deep_researcher.py`, `configuration.py`, `state.py`, `prompts.py`, `utils.py`, the auth middleware, the legacy implementations, the tests, `pyproject.toml`, `langgraph.json`, and the CI workflows — end to end.
+2. **Trace the real execution path.** Map the graph as it's compiled, not as it's described: a main graph (clarify → research brief → supervisor → final report) wrapping a supervisor subgraph that delegates to parallel researcher subgraphs.
+3. **Cite everything to a `file:line`.** An observation without a location is an opinion.
+4. **Verify every citation against the source.** This is the step most "AI-assisted" analysis skips — and the one that separates a credible audit from a plausible one. (We caught real citation errors doing this; see the end.)
 
-The sections it asked NEO to produce: Executive Summary, Repository Overview, Architecture Deep Dive, Component Analysis, Workflow Analysis, Strengths, Weaknesses, Scalability, Reliability, Security, Maintainability, Production Readiness, Risk Matrix, Top 10 Findings, and Prioritized Recommendations.
-
----
-
-## What NEO did (while Claude drove)
-
-NEO didn't summarize the README. Streaming back into the session, it:
-
-- 🧬 **Cloned the repo** (`git clone` into a local workspace) and walked the full tree.
-- 📖 **Read every core file end-to-end** — `deep_researcher.py`, `configuration.py`, `state.py`, `prompts.py`, `utils.py`, plus `security/auth.py`, the legacy implementations, the tests, `pyproject.toml`, `langgraph.json`, and the CI workflows.
-- 🧩 **Traced the actual graph** — the three-level nested `StateGraph`: a main graph (clarify → research brief → supervisor → final report) wrapping a supervisor subgraph that delegates to parallel researcher subgraphs.
-- 🔎 **Grepped to confirm line numbers** for each piece of evidence before writing it down.
-
-The result: a **15-section report** where every finding points to a concrete `file:line`.
+The output was a 15-section report. What follows is the part that generalizes.
 
 ---
 
-## What it found
+## What it found — and why it matters
 
-A clean architecture with real, shippable-blocking gaps. The highlights — each grounded in the actual code:
+Each finding below is a real artifact in the code. The reason to care is the **principle underneath it**, which holds for almost any agent system.
 
-### 🔴 The `or True` bug that silently ends research
+### 🔴 A one-line bug that silently ends research
 In `supervisor_tools`, the error handler reads:
 
 ```python
@@ -62,24 +48,39 @@ if is_token_limit_exceeded(e, configurable.research_model) or True:
     # ... end the research phase, return partial results
 ```
 
-That `or True` makes the branch **unconditional**. Any exception — a transient network blip, a tool error, anything — immediately ends the research phase and returns whatever was collected so far, with no retry and no error surfaced. It's one line (`deep_researcher.py:334`), and it's the single highest-scoring risk in the report (16/25).
+The `or True` makes the branch **unconditional**. Any exception — a transient network blip, a tool error, anything — ends the research phase and returns whatever was collected so far, with no retry and nothing surfaced. One line (`deep_researcher.py:334`); the highest-scoring risk in the report (16/25).
 
-### 🔴 Zero unit tests
-The `tests/` directory looks reassuring until you open it — it's all LangSmith evaluation harnesses and benchmarks. There is **no unit test** for any function, state reducer, graph node, or tool. Refactoring safely is essentially impossible.
+> **The principle:** *Agents fail silently by default.* A traditional service that swallows an exception returns a 500 someone notices. An agent that swallows one returns a confident, shorter answer — and **degraded output is indistinguishable from correct output** unless you design for it. The most dangerous agent failures aren't crashes; they're plausible partial results.
+> **Generalizes?** Universally. Any agent that catches-and-continues needs to treat "I gave up early" as a first-class, *observable* outcome — not a quiet `return`.
+
+### 🔴 A `tests/` directory with zero unit tests
+It looks reassuring until you open it: it's entirely LangSmith evaluation harnesses and benchmarks. There is no unit test for any function, state reducer, graph node, or tool.
+
+> **The principle:** *Evals are not tests.* Agent teams often build sophisticated eval suites (great for measuring quality) while having nothing that pins deterministic behavior — does the reducer merge correctly, does the router branch correctly, does config parse. Evals tell you the model got better or worse; tests tell you *you* didn't break something. You need both, and the presence of one is routinely mistaken for the other.
+> **Generalizes?** Strongly. "We have evals" is the most common false-confidence signal in agent codebases.
 
 ### 🟠 Almost no observability
-`deep_researcher.py` has **zero logging calls**. Debugging a production failure means editing source and redeploying. There's no trace context across the three-level graph.
+The main graph has zero logging calls and no trace context across its three levels. Debugging a production failure means editing source and redeploying.
 
-### 🟠 No timeouts on parallel research
+> **The principle:** *You cannot operate what you cannot see.* Agent control flow is non-deterministic and multi-step; without per-node structured logs and trace propagation, a failure in a sub-agent three levels down is effectively undebuggable in production. Observability is not a phase-two nicety for agents — it's the only way to run them at all.
+> **Generalizes?** Universally, and it gets worse as the graph deepens.
+
+### 🟠 Parallel work with no timeout
 The supervisor fans researchers out with `asyncio.gather(...)` and **no timeout** (`deep_researcher.py:300-305`). One researcher hitting a hanging API blocks the whole supervisor indefinitely.
 
+> **The principle:** *Fan-out without a deadline is a liveness bug.* The moment you parallelize sub-agents, the slowest (or stuck) one becomes your latency floor — and with no timeout, your availability floor. Every concurrent dispatch needs a per-task deadline and a partial-results strategy.
+> **Generalizes?** Any system using `gather`/`Promise.all` over external calls.
+
 ### 🟠 No cost controls
-`max_concurrent_research_units` defaults to 5 and `max_react_tool_calls` to 10 — so a single run can fan out to 50+ LLM calls and 50+ search calls, with **no budget enforcement** anywhere.
+`max_concurrent_research_units` defaults to 5 and `max_react_tool_calls` to 10 — so a single run can fan out to 50+ LLM calls and 50+ search calls, with no budget enforcement anywhere.
 
-### 🟡 And a few more
-A stale hardcoded `MODEL_TOKEN_LIMITS` map that breaks truncation for unknown models; four broad `except Exception` blocks; unbounded note accumulation in state; CI that runs only AI review bots (no test gate); and legacy code bundled into the production package.
+> **The principle:** *In agent systems, cost is a runtime variable, not a line item.* A recursive/fan-out agent's spend is a function of inputs you don't control at deploy time. Without a per-run budget ceiling, one pathological query can cost 100× a normal one. Treat tokens like you'd treat unbounded recursion.
+> **Generalizes?** Any agent with loops or fan-out — i.e., all of them.
 
-NEO rolled these into a **production-readiness scorecard**:
+### 🟡 The quieter ones
+A stale hardcoded `MODEL_TOKEN_LIMITS` map (`utils.py:788-829`) that returns `None` for unknown models — so truncation fails on the *first* retry instead of degrading; four broad `except Exception` blocks that can't tell transient from permanent errors; unbounded note accumulation in state; CI that runs only AI review bots; and legacy code bundled into the production package. Each is a small thing; together they're the texture of "prototype."
+
+NEO's report rolled these into a **production-readiness scorecard**:
 
 | Dimension | Score (1–5) | Dimension | Score (1–5) |
 |-----------|:-----------:|-----------|:-----------:|
@@ -88,41 +89,69 @@ NEO rolled these into a **production-readiness scorecard**:
 | Observability | 1 | Documentation | 4 |
 | CI/CD | 1 | Configuration | 4 |
 
-…plus a ranked top-10 findings list and a prioritized, file-specific recommendation set.
-
-> **The verdict:** an excellent research prototype and reference architecture — *not* a production system. The gaps are exactly the distance between "reference implementation" and "something you'd run unattended for paying users."
+> **The verdict:** an excellent research prototype and reference architecture — *not* a production system. The gaps are precisely the distance between "reference implementation" and "something you'd run unattended for paying users."
 
 ---
 
-## The part that makes it trustworthy
+## What surprised us
 
-Here's where this stops being a parlor trick. We didn't just publish what the agent wrote — **Claude verified it.**
+The defects were predictable. The discoveries were not.
 
-Repo-grounded claims are easy to check: open the file, go to the line, confirm the code says what the report says. So we did, against commit `68fb7ab`. And we found something worth flagging: on the first pass, **several line numbers were wrong** — the `or True` bug cited a line or two off; a couple of `utils.py` functions were attributed to the wrong ranges entirely; one even pointed at a docstring instead of the error handler it described.
-
-The *findings* were real — the bug, the missing tests, the swallowed errors all exist. But the citations have to be exact, or the evidence index is worthless. So Claude re-checked every `file:line` against the clone and corrected them. The published report's evidence index now matches the source line-for-line.
-
-That's the loop that turns "fast" into "shippable": **NEO investigates and writes; Claude verifies against ground truth.**
-
----
-
-## Why this combo works: Claude Code + NEO MCP
-
-- **🏠 It runs locally.** NEO clones and reads the code on *your* machine. For due diligence on someone else's repo, that's just `git clone` in your own workspace — nothing leaves your environment.
-- **🎯 It's task-oriented.** You give it an objective ("audit this repo, cite everything") and it plans the multi-step investigation itself.
-- **📄 It produces artifacts.** The output is a committable report, not a chat transcript — ready to drop into a repo, review, and act on.
-- **✅ It's verifiable.** Because every claim is a `file:line`, a second pass (human or agent) can confirm each one. That's what we did.
+- **The architecture is genuinely good.** A three-level nested `StateGraph` with cleanly separated supervisor and researcher subgraphs is *better structured* than a lot of code that's already in production. Decomposition was not the weak point — operability was. **Lesson: clean architecture and production-readiness are independent axes.** You can have one without the other, and this repo has exactly the surprising half.
+- **They solved the agent failure mode everyone forgets — and missed the ones everyone assumes are handled.** Structured outputs are wrapped in `.with_retry()` throughout, meaning the team clearly thought hard about *parsing* failures (a top-three agent footgun). Yet error *handling* around tool execution is where it falls down. Sophistication in one failure domain told us nothing about the others.
+- **There's real multi-tenant auth in a "reference" project.** Supabase-JWT middleware with per-resource handlers is more than most demos ship. It signals the project has production *aspirations* — which makes the missing test/observability layers more of a gap than an excuse.
+- **Excellent docs, near-zero observability.** Documentation scored 4/5; observability scored 1/5. **Good docstrings are not operability.** A well-documented system you can't see into at runtime is still a black box when it breaks.
+- **The scariest bug looked intentional.** `or True` reads like a debugging override someone left in — `# token limit OR (for now) anything → bail`. The most dangerous bugs aren't exotic; they're plausible one-liners that pass code review because they look deliberate.
 
 ---
 
-## Try it yourself
+## Lessons for anyone building agent systems
 
-Install the NEO MCP into Claude Code, open a repo you're evaluating, and ask for a repo-grounded due-diligence audit — clone, read the source, cite every finding.
+Pulled out so you can apply them without ever touching this repo:
 
-Then do the one thing that makes it bulletproof: **have Claude verify the citations against the actual code** before you trust the report.
+- **Testing —** Build deterministic unit tests for the *plumbing* (reducers, routers, config parsing, tool wrappers) and keep them separate from evals. Evals measure model quality; tests protect you during refactors. Shipping only evals is shipping no tests.
+- **Reliability —** Every fan-out gets a per-task timeout and a defined partial-results path. Distinguish transient (retryable) from permanent (fail-fast) errors explicitly — a bare `except Exception` erases the difference you most need.
+- **Observability —** Instrument *before* you scale, not after the first incident. Per-node structured logs + trace context that propagates through the whole graph. If a sub-agent three levels down can fail without leaving a trace, you don't have a production system.
+- **Cost control —** Put a hard per-run budget ceiling on any agent with loops or fan-out. Track spend as state and interrupt when exceeded. Assume an adversarial or pathological input will try to maximize your bill.
+- **Failure handling —** Make "the agent gave up / returned partial results" a loud, first-class, observable event. Silent degradation is the defining risk of agent systems because bad output and good output look the same.
+- **Productionization —** Treat clean architecture as table stakes, not the finish line. The work between "it runs in a demo" and "it runs unattended for customers" is almost entirely non-functional: tests, observability, error taxonomy, budgets, timeouts, CI gates.
+
+---
+
+## What would be required for production
+
+A concrete roadmap, in priority order:
+
+### First 30 days — stop the bleeding
+- Fix the `or True` bug; make early termination an explicit, logged decision.
+- Add a per-run cost/token budget with a hard ceiling and interrupt.
+- Add timeouts to every `gather` fan-out, with a partial-results fallback.
+- Add structured logging at each node and a real error taxonomy (transient vs permanent).
+
+### First 90 days — make it operable
+- Build a deterministic unit-test suite for reducers, routers, config, and tool wrappers; wire a CI gate (tests + lint + type-check) that blocks merges.
+- Add end-to-end trace propagation (e.g. OpenTelemetry) across all three graph levels.
+- Add rate limiting / backpressure and a health/readiness endpoint.
+- Replace the hardcoded token-limit map with a dynamic lookup that degrades gracefully on unknown models.
+
+### First 6 months — platform maturity
+- Cost attribution and budgets per tenant/run; spend dashboards and alerts.
+- Caching/deduplication for repeated searches; bound state growth.
+- Input validation and prompt-injection defenses on user-supplied topics.
+- Split legacy/experimental code out of the production package; formal release and dependency-audit process.
+
+---
+
+## How we kept it honest
+
+The credibility of an audit lives or dies on its evidence, so the last step was verification: re-check **every** `file:line` against the source at commit `68fb7ab`.
+
+It mattered. On the first pass, several citations were wrong — the `or True` bug was a couple of lines off, a few `utils.py` functions were attributed to the wrong ranges entirely, and one pointed at a docstring instead of the error handler it described. The *findings* were real; the *coordinates* weren't, and an evidence index with wrong coordinates is worthless. Each was corrected against the clone before publishing.
+
+> **The transferable habit:** repo-grounded claims are cheap to verify and expensive to fake — so verify them. Whether the first draft comes from a junior engineer, a consultant, or an AI agent, "trust, then check the line numbers" is what turns a fast analysis into a defensible one.
 
 ---
 
 *This is an independent technical review of public, open-source code, offered constructively. Open Deep Research is a strong prototype; the gaps noted here are the expected work of productionizing any reference implementation. Full report with all 15 sections and the verified evidence index: [`OPEN_DEEP_RESEARCH_DUE_DILIGENCE.md`](./OPEN_DEEP_RESEARCH_DUE_DILIGENCE.md).*
 
-**Powered by NEO MCP + Claude Code.**
+<sub>Tooling note: the investigation was run from inside Claude Code, which dispatched the repository reading and report drafting to the NEO MCP (a local agent execution layer) and then verified the output. The method — repository-grounded, evidence-verified analysis — is the point; the tools are interchangeable.</sub>
