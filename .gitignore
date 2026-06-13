@@ -1,0 +1,14 @@
+# Local clone NEO uses for verification (regenerated on demand, never committed)
+repo_clone/
+
+# OS / editor cruft
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Python (in case helper scripts are added later)
+__pycache__/
+*.pyc
+.venv/
+venv/

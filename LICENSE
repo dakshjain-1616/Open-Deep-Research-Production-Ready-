@@ -1,0 +1,23 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+This work — the due-diligence report (OPEN_DEEP_RESEARCH_DUE_DILIGENCE.md), the
+blog post (BLOG.md), and accompanying documentation in this repository — is
+licensed under the Creative Commons Attribution 4.0 International License.
+
+You are free to:
+  - Share — copy and redistribute the material in any medium or format
+  - Adapt — remix, transform, and build upon the material for any purpose,
+    even commercially
+
+Under the following terms:
+  - Attribution — You must give appropriate credit, provide a link to the
+    license, and indicate if changes were made.
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+---
+
+NOTE: This repository analyzes but does not redistribute the source code of
+langchain-ai/open_deep_research, which is licensed separately under the MIT
+License by LangChain, Inc. Code snippets quoted in the report are reproduced
+under fair-use for the purpose of technical commentary and review.
