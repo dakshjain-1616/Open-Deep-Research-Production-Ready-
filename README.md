@@ -54,7 +54,9 @@ Full ranked list of 10 in the report. Risk matrix highest score: **R1 (`or True`
 This is a showcase of the **Claude Code + NEO MCP** division of labor:
 
 - **Claude Code** — framed the audit in plain language, dispatched it, and **verified every citation** against the cloned source before publishing.
-- **NEO (via MCP)** — ran locally, cloned the repo, read the source end-to-end, and wrote the evidence-based report. Your code never leaves your machine.
+- **[NEO MCP](https://docs.heyneo.com/neo-mcp)** — ran locally, cloned the repo, read the source end-to-end, and wrote the evidence-based report. Your code never leaves your machine.
+
+> **Get NEO MCP:** [Docs](https://docs.heyneo.com/neo-mcp) · [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=NeoResearchInc.heyneo) · [Cursor Marketplace](https://marketplace.cursorapi.com/items/?itemName=NeoResearchInc.heyneo)
 
 Every `file:line` in the report was re-checked against commit `68fb7ab`. Citations that didn't match were corrected; the evidence index reflects the verified locations.
 

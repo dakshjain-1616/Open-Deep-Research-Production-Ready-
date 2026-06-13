@@ -11,7 +11,7 @@
 - **The subject:** [`langchain-ai/open_deep_research`](https://github.com/langchain-ai/open_deep_research) — a supervisor that spins up parallel researcher sub-agents to do automated deep research. We audited it at commit `68fb7ab`, with every finding tied to a verified `file:line`.
 - **The verdict:** a genuinely clean architecture (three-level nested `StateGraph`, structured outputs with retry, real multi-tenant auth) — but **not production-ready**: no unit tests, no CI gate, near-zero observability, no cost controls, no timeouts, and a one-line bug that silently ends research on *any* error.
 - **The point:** none of these gaps are unique to this repo. They are the **default failure profile of agent frameworks optimized for experimentation** — and that's what makes them worth studying.
-- **The method:** repository-grounded, evidence-driven analysis — read the source, cite the line, then *verify the citation against the code*. (Tooling: Claude Code + the NEO MCP. More on that at the end; it's the camera, not the subject.)
+- **The method:** repository-grounded, evidence-driven analysis — read the source, cite the line, then *verify the citation against the code*. (Tooling: Claude Code + [NEO MCP](https://docs.heyneo.com/neo-mcp). More on that at the end; it's the camera, not the subject.)
 
 ---
 
@@ -164,4 +164,6 @@ It mattered. On the first pass, several citations were wrong — the `or True` b
 
 *This is an independent technical review of public, open-source code, offered constructively. Open Deep Research is a strong prototype; the gaps noted here are the expected work of productionizing any reference implementation. Full report with all 15 sections and the verified evidence index: [`OPEN_DEEP_RESEARCH_DUE_DILIGENCE.md`](./OPEN_DEEP_RESEARCH_DUE_DILIGENCE.md).*
 
-<sub>Tooling note: the investigation was run from inside Claude Code, which dispatched the repository reading and report drafting to the NEO MCP (a local agent execution layer) and then verified the output. The method — repository-grounded, evidence-verified analysis — is the point; the tools are interchangeable.</sub>
+<sub>Tooling note: the investigation was run from inside Claude Code, which dispatched the repository reading and report drafting to [NEO MCP](https://docs.heyneo.com/neo-mcp) — a local agent execution layer — and then verified the output. The method — repository-grounded, evidence-verified analysis — is the point; the tools are interchangeable.</sub>
+
+<sub>**Get NEO MCP:** [Docs](https://docs.heyneo.com/neo-mcp) · [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=NeoResearchInc.heyneo) · [Cursor Marketplace](https://marketplace.cursorapi.com/items/?itemName=NeoResearchInc.heyneo)</sub>
